@@ -11,5 +11,6 @@ CREATE TABLE IF NOT EXISTS wm_match (
     away_team_id BIGINT       NOT NULL,
     match_group  VARCHAR(255) NOT NULL,
     home_goals   INTEGER,
-    away_goals   INTEGER
+    away_goals   INTEGER,
+    match_type VARCHAR(20) NOT NULL DEFAULT 'GROUP',
 );

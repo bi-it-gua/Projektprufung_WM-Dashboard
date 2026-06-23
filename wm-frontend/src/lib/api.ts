@@ -19,6 +19,7 @@ export interface Match {
   homeTeamId: number;
   awayTeamId: number;
   group: string;
+  matchType: "GROUP" | "KNOCKOUT";  // ← NEUE ZEILE
   homeGoals: number | null;
   awayGoals: number | null;
 }

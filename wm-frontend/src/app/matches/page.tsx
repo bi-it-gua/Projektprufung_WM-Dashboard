@@ -1,7 +1,21 @@
 import { getMatches, getTeams, Match, Team } from "@/lib/api";
+import { createMatchCard } from "@/components/match/MatchFactory";
 
 function teamName(teams: Team[], id: number): string {
   return teams.find((t) => t.id === id)?.name ?? `Team ${id}`;
+}
+
+function MatchInfo({ match }: { match: Match }) {
+  if (match.homeGoals === null || match.awayGoals === null) return null;
+  const diff = Math.abs(match.homeGoals - match.awayGoals);
+  const isTopGame = diff === 0;
+  const isSurprise = diff >= 3;
+  return (
+    <span>
+      {isTopGame && <span style={{ color: "gold" }}>⭐ Top-Spiel</span>}
+      {isSurprise && <span style={{ color: "red" }}>⚡ Überraschung</span>}
+    </span>
+  );
 }
 
 export default async function MatchesPage() {
@@ -34,6 +48,8 @@ export default async function MatchesPage() {
             <th>Heim</th>
             <th>Gast</th>
             <th>Ergebnis</th>
+            <th>Typ</th>
+            <th>Info</th>
           </tr>
         </thead>
         <tbody>
@@ -52,6 +68,12 @@ export default async function MatchesPage() {
                 ) : (
                   <span className="score open">offen</span>
                 )}
+              </td>
+              <td>
+                {createMatchCard(m, teamName(teams, m.homeTeamId), teamName(teams, m.awayTeamId))}
+              </td>
+              <td>
+                <MatchInfo match={m} />
               </td>
             </tr>
           ))}

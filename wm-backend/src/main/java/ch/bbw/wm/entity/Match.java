@@ -35,6 +35,9 @@ public class Match {
     @Column(name = "away_goals")
     private Integer awayGoals; // null = noch nicht gespielt
 
+    @Column(name = "match_type", nullable = false)
+    private String matchType; // "GROUP" oder "KNOCKOUT"
+
     public boolean isPlayed() {
         return homeGoals != null && awayGoals != null;
     }
