@@ -1,0 +1,35 @@
+services:
+  backend:
+    build:
+      context: ./wm-backend
+      dockerfile: Dockerfile
+
+    container_name: wm-backend
+
+    ports:
+      - "8080:8080"
+
+    restart: unless-stopped
+
+
+  frontend:
+    build:
+      context: ./wm-frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8080
+        NEXT_PUBLIC_API_URL_SERVER: http://backend:8080
+
+    container_name: wm-frontend
+
+    depends_on:
+      - backend
+
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+      NEXT_PUBLIC_API_URL_SERVER: http://backend:8080
+
+    ports:
+      - "3000:3000"
+
+    restart: unless-stopped

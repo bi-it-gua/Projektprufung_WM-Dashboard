@@ -1,8 +1,12 @@
 // Einfache API-Anbindung an das Spring-Boot-Backend.
 // Die Basis-URL kann ueber NEXT_PUBLIC_API_URL gesetzt werden.
 
-export const API_URL =
+const API_URL_SERVER =
+  process.env.NEXT_PUBLIC_API_URL_SERVER ?? "http://backend:8080";
+const API_URL_CLIENT =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+
+export const API_URL = typeof window === "undefined" ? API_URL_SERVER : API_URL_CLIENT;
 
 export interface Team {
   id: number;
