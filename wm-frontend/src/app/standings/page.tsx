@@ -1,11 +1,12 @@
-import { getStandings, TableRow } from "@/lib/api";
+import { getStandings, SortStrategy, TableRow } from "@/lib/api";
+import SortSelector from "@/components/standings/SortSelector";
 
 const GROUPS = ["A", "B", "C", "D"];
 
-async function GroupTable({ group }: { group: string }) {
+async function GroupTable({ group, sort }: { group: string; sort: SortStrategy }) {
   let rows: TableRow[] = [];
   try {
-    rows = await getStandings(group);
+    rows = await getStandings(group, sort);
   } catch {
     return (
       <div className="card">
@@ -29,6 +30,7 @@ async function GroupTable({ group }: { group: string }) {
             <th>N</th>
             <th>Tore</th>
             <th>Diff</th>
+            <th>Fair-Play</th>
             <th>Pkt</th>
           </tr>
         </thead>
@@ -44,6 +46,7 @@ async function GroupTable({ group }: { group: string }) {
                 {r.goalsFor}:{r.goalsAgainst}
               </td>
               <td>{r.goalDifference}</td>
+              <td>{r.fairPlayPoints}</td>
               <td>
                 <strong>{r.points}</strong>
               </td>
@@ -55,16 +58,19 @@ async function GroupTable({ group }: { group: string }) {
   );
 }
 
-export default function StandingsPage() {
+export default async function StandingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ sort?: string }>;
+}) {
+  const sort = ((await searchParams).sort ?? "points") as SortStrategy;
+
   return (
     <div>
       <h1>Tabelle</h1>
-      <p>
-        Hinweis: Die Tabelle ist aktuell nur nach Punkten sortiert. Bei
-        Punktgleichheit fehlt eine sinnvolle Reihenfolge.
-      </p>
+      <SortSelector />
       {GROUPS.map((g) => (
-        <GroupTable key={g} group={g} />
+        <GroupTable key={g} group={g} sort={sort} />
       ))}
     </div>
   );

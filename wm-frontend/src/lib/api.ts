@@ -22,6 +22,7 @@ export interface Match {
   matchType: "GROUP" | "KNOCKOUT";  // ← NEUE ZEILE
   homeGoals: number | null;
   awayGoals: number | null;
+  matchday: number | null;
 }
 
 export interface TableRow {
@@ -35,7 +36,10 @@ export interface TableRow {
   goalsAgainst: number;
   goalDifference: number;
   points: number;
+  fairPlayPoints: number;
 }
+
+export type SortStrategy = "points" | "goaldifference" | "fairplay";
 
 export async function getTeams(): Promise<Team[]> {
   const res = await fetch(`${API_URL}/api/teams`, { cache: "no-store" });
@@ -43,17 +47,23 @@ export async function getTeams(): Promise<Team[]> {
   return res.json();
 }
 
-export async function getMatches(group?: string): Promise<Match[]> {
-  const url = group
-    ? `${API_URL}/api/matches?group=${group}`
-    : `${API_URL}/api/matches`;
-  const res = await fetch(url, { cache: "no-store" });
+export async function getMatches(group?: string, matchday?: number): Promise<Match[]> {
+  const params = new URLSearchParams();
+  if (group) params.set("group", group);
+  if (matchday) params.set("matchday", String(matchday));
+  const query = params.toString();
+  const res = await fetch(`${API_URL}/api/matches${query ? `?${query}` : ""}`, {
+    cache: "no-store",
+  });
   if (!res.ok) throw new Error("Spiele konnten nicht geladen werden");
   return res.json();
 }
 
-export async function getStandings(group: string): Promise<TableRow[]> {
-  const res = await fetch(`${API_URL}/api/standings/${group}`, {
+export async function getStandings(
+  group: string,
+  sort: SortStrategy = "points"
+): Promise<TableRow[]> {
+  const res = await fetch(`${API_URL}/api/standings/${group}?sort=${sort}`, {
     cache: "no-store",
   });
   if (!res.ok) throw new Error("Tabelle konnte nicht geladen werden");

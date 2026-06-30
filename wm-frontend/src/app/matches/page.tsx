@@ -1,5 +1,6 @@
 import { getMatches, getTeams, Match, Team } from "@/lib/api";
 import { createMatchCard } from "@/components/match/MatchFactory";
+import MatchFilter from "@/components/match/MatchFilter";
 
 function teamName(teams: Team[], id: number): string {
   return teams.find((t) => t.id === id)?.name ?? `Team ${id}`;
@@ -18,13 +19,21 @@ function MatchInfo({ match }: { match: Match }) {
   );
 }
 
-export default async function MatchesPage() {
+export default async function MatchesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ group?: string; matchday?: string }>;
+}) {
+  const { group, matchday } = await searchParams;
   let matches: Match[] = [];
   let teams: Team[] = [];
   let error: string | null = null;
 
   try {
-    [matches, teams] = await Promise.all([getMatches(), getTeams()]);
+    [matches, teams] = await Promise.all([
+      getMatches(group, matchday ? Number(matchday) : undefined),
+      getTeams(),
+    ]);
   } catch {
     error = "Backend nicht erreichbar. Laeuft das Spring-Boot-Backend?";
   }
@@ -33,6 +42,7 @@ export default async function MatchesPage() {
     return (
       <div>
         <h1>Spiele</h1>
+        <MatchFilter />
         <div className="card">{error}</div>
       </div>
     );
@@ -41,6 +51,7 @@ export default async function MatchesPage() {
   return (
     <div>
       <h1>Spiele</h1>
+      <MatchFilter />
       <table>
         <thead>
           <tr>
