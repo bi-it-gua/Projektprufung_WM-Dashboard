@@ -22,11 +22,9 @@ public class MatchController {
     }
 
     @GetMapping
-    public List<Match> getMatches(@RequestParam(required = false) String group) {
-        if (group != null) {
-            return matchService.getMatchesByGroup(group);
-        }
-        return matchService.getAllMatches();
+    public List<Match> getMatches(@RequestParam(required = false) String group,
+                                   @RequestParam(required = false) Integer matchday) {
+        return matchService.getMatches(group, matchday);
     }
 
     // Ergebnis erfassen / aktualisieren.

@@ -18,12 +18,11 @@ public class MatchService {
         this.matchRepository = matchRepository;
     }
 
-    public List<Match> getAllMatches() {
+    public List<Match> getMatches(String group, Integer matchday) {
+        if (group != null && matchday != null) return matchRepository.findByGroupIgnoreCaseAndMatchday(group, matchday);
+        if (group != null) return matchRepository.findByGroupIgnoreCase(group);
+        if (matchday != null) return matchRepository.findByMatchday(matchday);
         return matchRepository.findAll();
-    }
-
-    public List<Match> getMatchesByGroup(String group) {
-        return matchRepository.findByGroupIgnoreCase(group);
     }
 
     // TODO: Es findet keinerlei Validierung statt. Negative Tore oder

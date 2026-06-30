@@ -12,7 +12,8 @@ public record TableRow(
         int lost,
         int goalsFor,
         int goalsAgainst,
-        int points
+        int points,
+        int fairPlayPoints // Karten-Strafpunkte, weniger ist besser
 ) {
     public int goalDifference() {
         return goalsFor - goalsAgainst;

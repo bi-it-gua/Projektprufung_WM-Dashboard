@@ -38,6 +38,15 @@ public class Match {
     @Column(name = "match_type", nullable = false)
     private String matchType; // "GROUP" oder "KNOCKOUT"
 
+    @Column(name = "fair_play_home", nullable = false)
+    private Integer fairPlayHome = 0; // Karten-Strafpunkte Heimteam (je weniger, desto besser)
+
+    @Column(name = "fair_play_away", nullable = false)
+    private Integer fairPlayAway = 0; // Karten-Strafpunkte Auswaertsteam
+
+    @Column
+    private Integer matchday; // 1, 2, 3, ... innerhalb der Gruppe
+
     public boolean isPlayed() {
         return homeGoals != null && awayGoals != null;
     }

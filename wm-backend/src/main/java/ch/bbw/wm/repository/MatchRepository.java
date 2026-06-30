@@ -8,4 +8,8 @@ import java.util.List;
 public interface MatchRepository extends JpaRepository<Match, Long> {
 
     List<Match> findByGroupIgnoreCase(String group);
+
+    List<Match> findByMatchday(Integer matchday);
+
+    List<Match> findByGroupIgnoreCaseAndMatchday(String group, Integer matchday);
 }

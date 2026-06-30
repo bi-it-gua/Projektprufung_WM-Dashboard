@@ -13,4 +13,7 @@ CREATE TABLE IF NOT EXISTS wm_match (
     home_goals   INTEGER,
     away_goals   INTEGER,
     match_type VARCHAR(20) NOT NULL DEFAULT 'GROUP',
+    fair_play_home INTEGER NOT NULL DEFAULT 0,
+    fair_play_away INTEGER NOT NULL DEFAULT 0,
+    matchday INTEGER
 );
