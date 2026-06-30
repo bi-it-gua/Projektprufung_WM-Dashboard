@@ -201,9 +201,17 @@ button:hover {
   margin: 0.5rem 0;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  background: #e8f5ee;
-  color: var(--primary-dark);
   font-weight: 600;
+}
+
+.status.ok {
+  background: #e8f5ee;
+  color: #1a7a40;
+}
+
+.status.error {
+  background: #fdecea;
+  color: #c0392b;
 }
 
 ul {

@@ -27,14 +27,17 @@ public class MatchController {
         return matchService.getMatches(group, matchday);
     }
 
-    // Ergebnis erfassen / aktualisieren.
-    // Hinweis: Die Eingaben werden NICHT validiert (siehe MatchService).
     @PutMapping("/{id}/result")
-    public ResponseEntity<Match> updateResult(@PathVariable Long id,
-                                              @RequestBody ResultRequest request) {
-        Optional<Match> updated =
-                matchService.updateResult(id, request.homeGoals(), request.awayGoals());
-        return updated.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<?> updateResult(@PathVariable Long id,
+                                          @RequestBody ResultRequest request) {
+        if (request.homeGoals() == null || request.awayGoals() == null) {
+            return ResponseEntity.badRequest().body("Tore dürfen nicht leer sein.");
+        }
+        if (request.homeGoals() < 0 || request.awayGoals() < 0) {
+            return ResponseEntity.badRequest().body("Tore dürfen nicht negativ sein.");
+        }
+        Optional<Match> updated = matchService.updateResult(id, request.homeGoals(), request.awayGoals());
+        return updated.<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).body("Spiel nicht gefunden."));
     }
 }

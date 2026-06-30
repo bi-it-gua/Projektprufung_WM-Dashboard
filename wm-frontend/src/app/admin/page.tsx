@@ -27,21 +27,39 @@ export default function AdminPage() {
   }
 
   async function handleSave(matchId: number, home: string, away: string) {
-    // Bewusst ohne Validierung: die Werte werden direkt uebernommen.
+    const h = Number(home);
+    const a = Number(away);
+    if (home === "" || away === "") {
+      setStatus("error:Bitte beide Toranzahlen eingeben.");
+      return;
+    }
+    if (!Number.isInteger(h) || !Number.isInteger(a)) {
+      setStatus("error:Tore müssen ganze Zahlen sein.");
+      return;
+    }
+    if (h < 0 || a < 0) {
+      setStatus("error:Tore dürfen nicht negativ sein.");
+      return;
+    }
     setStatus("");
     try {
-      await updateResult(matchId, Number(home), Number(away));
-      setStatus("Gespeichert.");
+      await updateResult(matchId, h, a);
+      setStatus("ok:Ergebnis gespeichert.");
       await load();
-    } catch {
-      setStatus("Speichern fehlgeschlagen.");
+    } catch (e: unknown) {
+      setStatus("error:" + (e instanceof Error ? e.message : "Speichern fehlgeschlagen."));
     }
   }
 
   return (
     <div>
       <h1>Ergebnis erfassen</h1>
-      {status && <p className="status">{status}</p>}
+      {status && (
+        <p className={status.startsWith("error:") ? "status error" : "status ok"}>
+          {status.startsWith("error:") ? "⚠ " : "✓ "}
+          {status.replace(/^(error|ok):/, "")}
+        </p>
+      )}
       <table>
         <thead>
           <tr>

@@ -25,8 +25,6 @@ public class MatchService {
         return matchRepository.findAll();
     }
 
-    // TODO: Es findet keinerlei Validierung statt. Negative Tore oder
-    // unbekannte Match-IDs werden ungeprueft uebernommen.
     public Optional<Match> updateResult(Long matchId, Integer homeGoals, Integer awayGoals) {
         Optional<Match> found = matchRepository.findById(matchId);
         if (found.isPresent()) {

@@ -80,6 +80,9 @@ export async function updateResult(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ homeGoals, awayGoals }),
   });
-  if (!res.ok) throw new Error("Ergebnis konnte nicht gespeichert werden");
+  if (!res.ok) {
+    const msg = await res.text().catch(() => "");
+    throw new Error(msg || "Ergebnis konnte nicht gespeichert werden");
+  }
   return res.json();
 }
