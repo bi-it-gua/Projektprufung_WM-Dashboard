@@ -1,0 +1,18 @@
+services:
+  backend:
+    image: benjaminsmith444/wm-backend:v2
+    container_name: wm-backend
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  frontend:
+    image: benjaminsmith444/wm-frontend:v2
+    container_name: wm-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+    depends_on:
+      - backend
+    restart: unless-stopped
